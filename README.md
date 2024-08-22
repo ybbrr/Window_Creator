@@ -1,9 +1,11 @@
 # Window_Creator
-I wrote a library to easily create a high functional, flexible OpenGL Windows and fill them with given images.
+I wrote a library to easily create a high functional, flexible OpenGL Windows.<br />
 
-You can create as many windows you want. You can interact with your windows separately.
+You can create as many windows you want.<br />
+You can fill your windows with the image buffer you want to see on the screen.<br />
+You can interact with your windows separately.<br />
 
-All windows are auto resizable.
+All windows are auto resizable.<br />
 
 And it is cross-platform for Windows and Linux.
 
