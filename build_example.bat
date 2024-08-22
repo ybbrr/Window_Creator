@@ -67,4 +67,5 @@ if %LINK_TYPE%==Shared (
 
     cmake --build __build_out__/%LINK_TYPE%/%BUILD_TYPE% --config %BUILD_TYPE% -j8
 )
+
 :: end of file

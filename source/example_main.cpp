@@ -7,7 +7,6 @@
 /// @copyright Copyright (c) 2024
 /// 
 
-#include <iostream>
 #include <window.hpp>
 
 int main()
@@ -32,24 +31,46 @@ int main()
     int channel = 4;
     int len= frame_width * frame_height * channel;
 
-    uint8_t* white = new uint8_t[len];
-    memset(white, 255, len);
+    uint8_t* red = new uint8_t[len];
+    for (int idx = 0; idx < len; idx+=4)
+    {
+        red[idx] = 255;
+        red[idx+1] = 0;
+        red[idx+2] = 0;
+        red[idx+3] = 255;
+    }
 
-    uint8_t* gray = new uint8_t[len];
-    memset(gray, 128, len);
+    uint8_t* green = new uint8_t[len];
+    for (int idx = 0; idx < len; idx+=4)
+    {
+        green[idx] = 0;
+        green[idx+1] = 255;
+        green[idx+2] = 0;
+        green[idx+3] = 255;
+    }
 
-    uint8_t* dark = new uint8_t[len];
-    memset(dark, 34, len);
+    uint8_t* blue = new uint8_t[len];
+    for (int idx = 0; idx < len; idx+=4)
+    {
+        blue[idx] = 0;
+        blue[idx+1] = 0;
+        blue[idx+2] = 255;
+        blue[idx+3] = 255;
+    }
 
     volatile bool exit_status = false;
 
     // Press ESC to close the window
     while (!exit_status)
     {
-        window->render(white, frame_width, frame_height, exit_status);
-        window2->render(gray, frame_width, frame_height, exit_status);
-        window3->render(dark, frame_width, frame_height, exit_status);
+        window->render(red, frame_width, frame_height, exit_status);
+        window2->render(green, frame_width, frame_height, exit_status);
+        window3->render(blue, frame_width, frame_height, exit_status);
     }
+
+    delete[] red;
+    delete[] green;
+    delete[] blue;
 
     return 0;
 }

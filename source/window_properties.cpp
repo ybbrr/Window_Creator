@@ -40,6 +40,7 @@ namespace YB
     GLuint WindowProperties::m_fragment_shader_id{};
     GLuint WindowProperties::m_texture_output{};
     GLint WindowProperties::m_location{};
+    bool WindowProperties::m_is_common_window_resources_cleared{false};
 
     const char* WindowProperties::m_vertex_shader = "\n"
         "#version 330 core\n"
@@ -135,7 +136,6 @@ namespace YB
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
-
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
         this->m_window = glfwCreateWindow(window_width,
@@ -167,15 +167,6 @@ namespace YB
             throw std::runtime_error("Could not initialize GLAD");
         }
 
-        printf("\nGPU Vendor: %s",
-               reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
-
-        printf("\nGPU: %s",
-               reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-
-        printf("\nOpenGL Version: %s\n",
-               reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-
         glfwSetWindowUserPointer(m_window, this);
 
         glfwSetKeyCallback(this->m_window, keyboard_callback);
@@ -203,27 +194,48 @@ namespace YB
 
     WindowProperties::~WindowProperties()
     {
-        glDeleteVertexArrays(1, &m_VAO);
-        glDeleteBuffers(1, &m_VBO);
-        glDeleteBuffers(1, &m_IBO);
+        // Ensure the context is current
+        glfwMakeContextCurrent(this->m_window);
 
-        glDetachShader(m_shader_program, m_vertex_shader_id);
-        glDetachShader(m_shader_program, m_fragment_shader_id);
-
-        if (m_shader_program != 0)
+        if (!m_is_common_window_resources_cleared)
         {
-            glDeleteProgram(m_shader_program);
+            if (m_VAO != 0)
+            {
+                glDeleteVertexArrays(1, &m_VAO);
+            }
+            if (m_VBO != 0)
+            {
+                glDeleteBuffers(1, &m_VBO);
+            }
+            if (m_IBO != 0)
+            {
+                glDeleteBuffers(1, &m_IBO);
+            }
+
+            if (m_shader_program != 0)
+            {
+                if (m_vertex_shader_id != 0)
+                {
+                    glDetachShader(m_shader_program, m_vertex_shader_id);
+                }
+                if (m_fragment_shader_id != 0)
+                {
+                    glDetachShader(m_shader_program, m_fragment_shader_id);
+                }
+                glDeleteProgram(m_shader_program);
+            }
+
+            m_is_common_window_resources_cleared = true;
         }
 
         glfwDestroyWindow(this->m_window);
-
         glfwTerminate();
     }
 
-    void WindowProperties::render(uint8_t * data_ptr,
-                                  int frame_width,
-                                  int frame_height,
-                                  volatile bool & exit_status) noexcept
+    void WindowProperties::image_render(uint8_t * data_ptr,
+                                        int frame_width,
+                                        int frame_height,
+                                        volatile bool & exit_status) noexcept
     {
 
         glfwMakeContextCurrent(this->m_window);
@@ -269,11 +281,6 @@ namespace YB
         {
             exit_status = true;
         }
-    }
-
-    GLFWwindow* WindowProperties::get_window_context() noexcept
-    {
-        return this->m_window;
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -422,6 +429,7 @@ namespace YB
         }
     }
 
+#ifdef _WIN32
     bool WindowProperties::is_dark_mode_enabled() noexcept
     {
         HKEY h_Key;
@@ -452,8 +460,9 @@ namespace YB
 
         return result == ERROR_SUCCESS && dark_mode == 0; // 0 means dark mode, 1 means light mode
     }
+#endif
 
-    ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Protected Functions
 ////////////////////////////////////////////////////////////////////////////////
 

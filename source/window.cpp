@@ -54,15 +54,10 @@ namespace YB
                     int frame_height,
                     volatile bool& t_exit_status) const noexcept
         {
-            this->m_window_properties->render(data_ptr,
-                                              frame_width,
-                                              frame_height,
-                                              t_exit_status);
-        }
-
-        GLFWwindow* get_window_context() const noexcept
-        {
-            return this->m_window_properties->get_window_context();
+            this->m_window_properties->image_render(data_ptr,
+                                                    frame_width,
+                                                    frame_height,
+                                                    t_exit_status);
         }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -99,11 +94,6 @@ namespace YB
                              frame_width,
                              frame_height,
                              exit_status);
-    }
-
-    GLFWwindow* Window::get_window_context() const noexcept
-    {
-        return this->p_impl->get_window_context();
     }
 
 ////////////////////////////////////////////////////////////////////////////////

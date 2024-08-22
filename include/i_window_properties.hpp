@@ -52,12 +52,10 @@ namespace YB
     // Public Members
     ////////////////////////////////////////////////////////////////////////////
 
-        virtual void render(uint8_t * data_ptr,
-                            int frame_width,
-                            int frame_height,
-                            volatile bool& t_exit_status) noexcept = 0;
-
-        virtual GLFWwindow* get_window_context() noexcept = 0;
+        virtual void image_render(uint8_t * data_ptr,
+                                  int frame_width,
+                                  int frame_height,
+                                  volatile bool& t_exit_status) noexcept = 0;
 
     ////////////////////////////////////////////////////////////////////////////
     // Private Members

@@ -1,9 +1,9 @@
 ///
 /// @file window_properties.hpp
 /// @author Yasin BASAR
-/// @brief
+/// @brief Defined the WindowProperties class for creating and filling windows with given buffers.
 /// @version 1.0.0
-/// @date 27/07/2014
+/// @date 22/08/2014
 /// @copyright Copyright (c) 2024
 ///
 
@@ -62,19 +62,15 @@ namespace YB
         /// @brief Destructs window creator object.
         ~WindowProperties() noexcept override;
 
-        /// @brief It runs window render cycle
+        /// @brief It runs window image rendering
         /// @param data_ptr[in] Image buffer pointer. Only 4 channel images acceptable.
         /// @param frame_width[in] Image Width
         /// @param frame_height[in] Image Height
         /// @param exit_status[out] Use it to end your render loop
-        void render(uint8_t* data_ptr,
-                    int frame_width,
-                    int frame_height,
-                    volatile bool& exit_status) noexcept override;
-
-        /// @brief It returns Window Context.
-        /// @return Window Context pointer
-        GLFWwindow* get_window_context() noexcept override;
+        void image_render(uint8_t* data_ptr,
+                          int frame_width,
+                          int frame_height,
+                          volatile bool& exit_status) noexcept override;
 
     ////////////////////////////////////////////////////////////////////////////
     // Private Members
@@ -108,6 +104,8 @@ namespace YB
                                       int action,
                                       int mode) noexcept;
 
+        /// @brief Instance-specific window resize callback.
+        ///        Prevents windows from affecting each other when resizing.
         void resize_window(int width, int height) const noexcept;
 
         /// @brief Window resize callback function to update the viewport.
@@ -119,7 +117,6 @@ namespace YB
                                            int height) noexcept;
 
 #ifdef _WIN32
-
         /// @brief Checks if Dark Mode enabled in Windows Operating System
         /// @return returns true if Dark Mode enabled, otherwise returns false
         static bool is_dark_mode_enabled() noexcept;
@@ -135,6 +132,7 @@ namespace YB
         static GLuint m_fragment_shader_id; ///< Fragment shader attach id of OpenGL operations.
         static GLuint m_texture_output; ///< Texture attach id of OpenGL operations.
         static GLint m_location; ///< Location id that match locations ids in the shader code.
+        static bool m_is_common_window_resources_cleared; ///< A variable to check when there are multiple windows to not re-clear static resources.
         GLFWwindow* m_window; ///< Window context object.
 
     ////////////////////////////////////////////////////////////////////////////

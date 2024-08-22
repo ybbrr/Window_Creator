@@ -8,16 +8,31 @@ set(CMAKE_CXX_STANDARD 17)
 
 if(EDITOR_BUILD)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE})
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP /O2 /MD")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /O2 /MD /arch:AVX2")
+    if (MSVC)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP /O2 /MD")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /O2 /MD /arch:AVX2")
+    endif ()
+
+    if (UNIX)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -march=native")
+    endif ()
 endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP /Od /MDd")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /Od /MDd /arch:AVX2")
+    if (MSVC)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP /Od /MDd")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /Od /MDd /arch:AVX2")
+    endif ()
+
+    if (UNIX)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Og -g -Wall -ggdb")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Og -g -Wall -ggdb -march=native")
+    endif ()
 endif ()
 
 set(WORKSPACE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR})
@@ -35,7 +50,6 @@ endif ()
 
 # Project Includes
 include_directories(${WORKSPACE_FOLDER}/include)
-include_directories(${WORKSPACE_FOLDER}/include/interface)
 
 # Third Party Includes
 include_directories(${THIRD_PARTY_FOLDER}/glad/include)
@@ -44,13 +58,31 @@ include_directories(${THIRD_PARTY_FOLDER}/glfw/windows/include)
 # GLAD
 set(GLAD_SOURCE_FILE ${THIRD_PARTY_FOLDER}/glad/source/glad.c)
 
-# GLFW
-add_compile_definitions(GLFW_EXPOSE_NATIVE_WIN32)
-link_directories(${THIRD_PARTY_FOLDER}/glfw/windows/lib/${CMAKE_BUILD_TYPE})
-set(GLFW_TARGET
-    glfw3.lib
-    uxtheme
-    dwmapi)
+if (MSVC)
+    # GLFW
+    add_compile_definitions(GLFW_EXPOSE_NATIVE_WIN32)
+    link_directories(${THIRD_PARTY_FOLDER}/glfw/windows/lib/${CMAKE_BUILD_TYPE})
+    set(GLFW_TARGET
+        glfw3.lib
+        uxtheme
+        dwmapi)
+endif ()
+
+if (UNIX)
+    # Third Party Includes
+    include_directories(${THIRD_PARTY_FOLDER}/glfw/linux/include)
+    include_directories(${THIRD_PARTY_FOLDER}/glm/linux)
+
+    # GLFW
+    set(GLFW_BUILD_WIN32 OFF)
+    set(GLFW_LIBRARY_TYPE STATIC)
+    set(GLFW_BUILD_EXAMPLES OFF)
+    set(GLFW_BUILD_TESTS OFF)
+    set(GLFW_BUILD_DOCS OFF)
+    set(GLFW_INSTALL OFF)
+    add_subdirectory(${THIRD_PARTY_FOLDER}/glfw/linux)
+    set(GLFW_TARGET glfw)
+endif ()
 
 if (NOT BUILD_EXAMPLE)
     add_library(
@@ -78,7 +110,23 @@ target_link_libraries(
 
     PRIVATE
 
-    ${GLFW_TARGET}
-    )
+    ${GLFW_TARGET})
+
+install(TARGETS ${PROJECT_NAME}
+        DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+if(NOT BUILD_EXAMPLE AND NOT EDITOR_BUILD)
+    set(OUTPUT_DIR ${CMAKE_INSTALL_PREFIX})
+    set(FILE_TO_COPY ${CMAKE_SOURCE_DIR}/include/window.hpp)
+    set(OUTPUT_FILE ${OUTPUT_DIR}/include/window.hpp)
+
+    # Add a custom command to copy the directory
+    add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${FILE_TO_COPY} ${OUTPUT_FILE}
+    COMMENT "Copying file ${FILE_TO_COPY} to ${OUTPUT_FILE}")
+endif()
+
 
 # end of file
