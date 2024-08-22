@@ -1,7 +1,7 @@
 # .idea
-./.idea/editor.xml
-./.idea/codeStyles/codeStyleConfig.xml
-./.idea/copyright/profiles_settings.xml
+/.idea/editor.xml
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/copyright/profiles_settings.xml
 
 # Compiled Object files
 *.slo
