@@ -14,8 +14,8 @@ int main()
     int window_width=200;
     int window_height=200;
 
-    std::unique_ptr<YB::WindowCreator> window{
-        new YB::WindowCreator("test window", 2 * window_width, 2 * window_height, true)
+    std::unique_ptr<YB::WindowCreator> window1{
+        new YB::WindowCreator("test window 1", 2 * window_width, 2 * window_height, true)
     };
 
     std::unique_ptr<YB::WindowCreator> window2{
@@ -63,7 +63,7 @@ int main()
     // Press ESC to close the window
     while (!exit_status)
     {
-        window->image_show(red_image, frame_width, frame_height, exit_status);
+        window1->image_show(red_image, frame_width, frame_height, exit_status);
         window2->image_show(green_image, frame_width, frame_height, exit_status);
         window3->image_show(blue_image, frame_width, frame_height, exit_status);
     }

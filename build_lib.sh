@@ -78,7 +78,7 @@ cmake -G "$CMAKE_GENERATOR" \
     -D CMAKE_BUILD_TYPE="$BUILD_TYPE" \
     -D SHARED_EXPORT="$SHARED_ENABLE" \
     -D STATIC_EXPORT="$STATIC_ENABLE" \
-    -D CMAKE_INSTALL_PREFIX="./__build_out__/$BUILD_TYPE" \
+    -D CMAKE_INSTALL_PREFIX="./__build_out__/$BUILD_TYPE/$LINK_TYPE" \
     -B "./__build_dir__/$BUILD_TYPE" .
 
 cmake --build "__build_dir__/$BUILD_TYPE" --config "$BUILD_TYPE" -j"$NUM_THREADS"

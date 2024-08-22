@@ -5,6 +5,8 @@ You can create as many windows you want. You can interact with your windows sepa
 
 All windows are auto resizable.
 
+And it is cross-platform for Windows and Linux.
+
 ## How to add Third Parties to Project Workspace Folder
 Download the third parties from pre-releases here: https://github.com/ybbrr/Window_Creator/releases/tag/third_parties <br />
 And extract the content of `__third-parties__.zip` to Workspace Folder of the project.
@@ -26,7 +28,73 @@ To compile static or shared library --> Run `sh build_lib.sh`
 ## Usage
 
 ```c++
+#include <window_creator.hpp>
 
+int main()
+{
+    int window_width=200;
+    int window_height=200;
+
+    std::unique_ptr<YB::WindowCreator> window1{
+        new YB::WindowCreator("test window 1", 2 * window_width, 2 * window_height, true)
+    };
+
+    std::unique_ptr<YB::WindowCreator> window2{
+        new YB::WindowCreator("test window 2", 3 * window_width, 3 * window_height, true)
+    };
+
+    std::unique_ptr<YB::WindowCreator> window3{
+        new YB::WindowCreator("test window 3", 4 * window_width, 4 * window_height, true)
+    };
+
+    int frame_width = 1600;
+    int frame_height = 900;
+    int channel = 4;
+    int len= frame_width * frame_height * channel;
+
+    uint8_t* red_image = new uint8_t[len];
+    for (int idx = 0; idx < len; idx+=4)
+    {
+        red_image[idx] = 255;
+        red_image[idx+1] = 0;
+        red_image[idx+2] = 0;
+        red_image[idx+3] = 255;
+    }
+
+    uint8_t* green_image = new uint8_t[len];
+    for (int idx = 0; idx < len; idx+=4)
+    {
+        green_image[idx] = 0;
+        green_image[idx+1] = 255;
+        green_image[idx+2] = 0;
+        green_image[idx+3] = 255;
+    }
+
+    uint8_t* blue_image = new uint8_t[len];
+    for (int idx = 0; idx < len; idx+=4)
+    {
+        blue_image[idx] = 0;
+        blue_image[idx+1] = 0;
+        blue_image[idx+2] = 255;
+        blue_image[idx+3] = 255;
+    }
+
+    volatile bool exit_status = false;
+
+    // Press ESC to close the window
+    while (!exit_status)
+    {
+        window1->image_show(red_image, frame_width, frame_height, exit_status);
+        window2->image_show(green_image, frame_width, frame_height, exit_status);
+        window3->image_show(blue_image, frame_width, frame_height, exit_status);
+    }
+
+    delete[] red_image;
+    delete[] green_image;
+    delete[] blue_image;
+
+    return 0;
+}
 ```
 
 [comment]: #end_of_file

@@ -61,7 +61,7 @@ cmake -G "$CMAKE_GENERATOR" \
     -D SHARED_EXPORT=OFF \
     -D STATIC_EXPORT=ON \
     -D BUILD_EXAMPLE=ON \
-    -D CMAKE_INSTALL_PREFIX="./__build_out__/$BUILD_TYPE" \
+    -D CMAKE_INSTALL_PREFIX="./__build_out__/$BUILD_TYPE/example_exe" \
     -B "./__build_dir__/$BUILD_TYPE" .
 
 cmake --build "__build_dir__/$BUILD_TYPE" --config "$BUILD_TYPE" -j"$NUM_THREADS"
