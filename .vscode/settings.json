@@ -1,0 +1,17 @@
+{
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "cmake.generator": "Ninja",
+    "cmake.buildDirectory": "${workspaceFolder}/__build_dir__",
+    "cmake.configureArgs": [
+        "-D CMAKE_RUNTIME_OUTPUT_DIRECTORY=${workspaceFolder}/__build_out__",
+        "-D SHARED_EXPORT=OFF",
+        "-D STATIC_EXPORT=ON",
+        "-D EDITOR_BUILD=ON",
+        "-D BUILD_EXAMPLE=ON"
+    ],
+    "cmake.configureOnOpen": false,
+    "editor.rulers": [
+        80,
+        120
+    ]
+}

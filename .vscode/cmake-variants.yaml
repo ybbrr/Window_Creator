@@ -1,0 +1,14 @@
+buildType:
+  default: Debug
+  choices:
+    debug:
+      short: Debug
+      long: Debug compilation configuration
+      buildType: Debug
+    release:
+      short: Release
+      long: Release compilation configuration
+      buildType: Release
+
+# end of file
+ 
