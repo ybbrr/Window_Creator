@@ -3,27 +3,27 @@
 /// @author Yasin BASAR
 /// @brief Example usage of Window Handler
 /// @version 1.0.0
-/// @date 20/07/2014
+/// @date 22/08/2024
 /// @copyright Copyright (c) 2024
 /// 
 
-#include <window.hpp>
+#include <window_creator.hpp>
 
 int main()
 {
-    int window_width=400;
-    int window_height=400;
+    int window_width=200;
+    int window_height=200;
 
-    std::unique_ptr<YB::Window> window{
-        new YB::Window("test window", window_width, window_height, true)
+    std::unique_ptr<YB::WindowCreator> window{
+        new YB::WindowCreator("test window", 2 * window_width, 2 * window_height, true)
     };
 
-    std::unique_ptr<YB::Window> window2{
-        new YB::Window("test window 2", 1.5f * window_width, 1.5f * window_height, true)
+    std::unique_ptr<YB::WindowCreator> window2{
+        new YB::WindowCreator("test window 2", 3 * window_width, 3 * window_height, true)
     };
 
-    std::unique_ptr<YB::Window> window3{
-        new YB::Window("test window 3", 1.8f * window_width, 1.8f * window_height, true)
+    std::unique_ptr<YB::WindowCreator> window3{
+        new YB::WindowCreator("test window 3", 4 * window_width, 4 * window_height, true)
     };
 
     int frame_width = 1600;
@@ -31,31 +31,31 @@ int main()
     int channel = 4;
     int len= frame_width * frame_height * channel;
 
-    uint8_t* red = new uint8_t[len];
+    uint8_t* red_image = new uint8_t[len];
     for (int idx = 0; idx < len; idx+=4)
     {
-        red[idx] = 255;
-        red[idx+1] = 0;
-        red[idx+2] = 0;
-        red[idx+3] = 255;
+        red_image[idx] = 255;
+        red_image[idx+1] = 0;
+        red_image[idx+2] = 0;
+        red_image[idx+3] = 255;
     }
 
-    uint8_t* green = new uint8_t[len];
+    uint8_t* green_image = new uint8_t[len];
     for (int idx = 0; idx < len; idx+=4)
     {
-        green[idx] = 0;
-        green[idx+1] = 255;
-        green[idx+2] = 0;
-        green[idx+3] = 255;
+        green_image[idx] = 0;
+        green_image[idx+1] = 255;
+        green_image[idx+2] = 0;
+        green_image[idx+3] = 255;
     }
 
-    uint8_t* blue = new uint8_t[len];
+    uint8_t* blue_image = new uint8_t[len];
     for (int idx = 0; idx < len; idx+=4)
     {
-        blue[idx] = 0;
-        blue[idx+1] = 0;
-        blue[idx+2] = 255;
-        blue[idx+3] = 255;
+        blue_image[idx] = 0;
+        blue_image[idx+1] = 0;
+        blue_image[idx+2] = 255;
+        blue_image[idx+3] = 255;
     }
 
     volatile bool exit_status = false;
@@ -63,14 +63,14 @@ int main()
     // Press ESC to close the window
     while (!exit_status)
     {
-        window->render(red, frame_width, frame_height, exit_status);
-        window2->render(green, frame_width, frame_height, exit_status);
-        window3->render(blue, frame_width, frame_height, exit_status);
+        window->image_show(red_image, frame_width, frame_height, exit_status);
+        window2->image_show(green_image, frame_width, frame_height, exit_status);
+        window3->image_show(blue_image, frame_width, frame_height, exit_status);
     }
 
-    delete[] red;
-    delete[] green;
-    delete[] blue;
+    delete[] red_image;
+    delete[] green_image;
+    delete[] blue_image;
 
     return 0;
 }

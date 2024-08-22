@@ -3,7 +3,7 @@
 /// @author Yasin BASAR
 /// @brief OpenGL Window context creator.
 /// @version 1.0.0
-/// @date 20/07/2014
+/// @date 22/08/2024
 /// @copyright Copyright (c) 2024
 ///
 
@@ -43,18 +43,18 @@ namespace YB
 {
     /// @class Window
     /// @brief
-    class DLL_SPECS Window
+    class DLL_SPECS WindowCreator
     {
     public:
     ////////////////////////////////////////////////////////////////////////////
     // Special Members
     ////////////////////////////////////////////////////////////////////////////
 
-        Window() noexcept = delete; ///< Deleted default constructor
-        Window(Window &&) noexcept = delete; ///< Default move constructor
-        Window &operator=(Window &&) noexcept = delete; ///< Default move assignment operator
-        Window(const Window &) noexcept = delete; ///< Default copy constructor
-        Window &operator=(Window &) noexcept = delete; ///< Default copy assignment operator
+        WindowCreator() noexcept = delete; ///< Deleted default constructor
+        WindowCreator(WindowCreator &&) noexcept = delete; ///< Default move constructor
+        WindowCreator &operator=(WindowCreator &&) noexcept = delete; ///< Default move assignment operator
+        WindowCreator(const WindowCreator &) noexcept = delete; ///< Default copy constructor
+        WindowCreator &operator=(WindowCreator &) noexcept = delete; ///< Default copy assignment operator
 
     ////////////////////////////////////////////////////////////////////////////
     // Public Members
@@ -66,27 +66,23 @@ namespace YB
         /// @param window_height[in] Window Height
         /// @param cap_to_screen_frame_rate[in] Set false this parameter for unlimited framerate,
         /// otherwise window's framerate will be capped to the screen's framerate.
-        Window(const char* window_name,
+        WindowCreator(const char* window_name,
                       int window_width,
                       int window_height,
                       bool cap_to_screen_frame_rate);
 
         /// @brief Destructs window creator object.
-        ~Window() noexcept;
+        ~WindowCreator() noexcept;
 
 	    /// @brief It runs window render cycle
 	    /// @param data_ptr[in] Image buffer pointer. Only 4 channel images acceptable.
 	    /// @param frame_width[in] Image Width
 	    /// @param frame_height[in] Image Height
 	    /// @param exit_status[out] Use it to end your render loop
-	    void render(uint8_t * data_ptr,
-	                int frame_width,
-	                int frame_height,
-	                volatile bool& exit_status) const noexcept;
-
-        /// @brief It returns Window Context.
-        /// @return GLFWwindow* - Window Context pointer
-        GLFWwindow* get_window_context() const noexcept;
+	    void image_show(uint8_t * data_ptr,
+	                    int frame_width,
+	                    int frame_height,
+	                    volatile bool& exit_status) const noexcept;
 
     ////////////////////////////////////////////////////////////////////////////
     // Private Members

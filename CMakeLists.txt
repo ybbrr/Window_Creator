@@ -91,7 +91,7 @@ if (NOT BUILD_EXAMPLE)
         ${LIBRARY_TYPE}
 
         ${GLAD_SOURCE_FILE}
-        ${WORKSPACE_FOLDER}/source/window.cpp
+        ${WORKSPACE_FOLDER}/source/window_creator.cpp
         ${WORKSPACE_FOLDER}/source/window_properties.cpp)
 endif ()
 
@@ -101,7 +101,7 @@ if (BUILD_EXAMPLE)
 
         ${GLAD_SOURCE_FILE}
         ${WORKSPACE_FOLDER}/source/example_main.cpp
-        ${WORKSPACE_FOLDER}/source/window.cpp
+        ${WORKSPACE_FOLDER}/source/window_creator.cpp
         ${WORKSPACE_FOLDER}/source/window_properties.cpp)
 endif ()
 
@@ -117,8 +117,8 @@ install(TARGETS ${PROJECT_NAME}
 
 if(NOT BUILD_EXAMPLE AND NOT EDITOR_BUILD)
     set(OUTPUT_DIR ${CMAKE_INSTALL_PREFIX})
-    set(FILE_TO_COPY ${CMAKE_SOURCE_DIR}/include/window.hpp)
-    set(OUTPUT_FILE ${OUTPUT_DIR}/include/window.hpp)
+    set(FILE_TO_COPY ${CMAKE_SOURCE_DIR}/include/window_creator.hpp)
+    set(OUTPUT_FILE ${OUTPUT_DIR}/include/window_creator.hpp)
 
     # Add a custom command to copy the directory
     add_custom_command(

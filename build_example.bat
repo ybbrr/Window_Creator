@@ -30,42 +30,27 @@ if "%generator_choice%"=="1" (
 @echo.
 echo Selected CMake Generator: %CMAKE_GENERATOR%
 @echo.
-@echo off
-set /P library_choice=Compile the executable with: (1 for Static Window Handler, 2 for Shared Window Handler):
-if "%library_choice%"=="1" (
-    set LINK_TYPE=Static
-    set SHARED_ENABLE=OFF
-    set STATIC_ENABLE=ON
-) else if "%library_choice%"=="2" (
-    set LINK_TYPE=Shared
-    set SHARED_ENABLE=ON
-    set STATIC_ENABLE=OFF
-) else (
-    echo Invalid library type. Please enter 1 or 2.
-    exit /b 1
-)
-@echo.
-echo Selected Window Handler type: %LINK_TYPE%
+
+
 @echo.
 set /P "=Press any key to start compile operations... " <nul & pause >nul & echo(
 @echo.
 
-if %LINK_TYPE%==Shared (
-    cmake -G %CMAKE_GENERATOR% ^
-    -D CMAKE_BUILD_TYPE=%BUILD_TYPE% ^
-    -D SHARED_EXPORT=%SHARED_ENABLE% ^
-    -D STATIC_EXPORT=%STATIC_ENABLE% ^
-    -B __build_out__/%LINK_TYPE%/%BUILD_TYPE% .
+set /A NUM_THREADS=%NUMBER_OF_PROCESSORS% - 2
 
-    cmake --build __build_out__/%LINK_TYPE%/%BUILD_TYPE% --config %BUILD_TYPE% -j8
+cmake -G %CMAKE_GENERATOR% ^
+    -D CMAKE_BUILD_TYPE=%BUILD_TYPE% ^
+    -D SHARED_EXPORT=OFF ^
+    -D STATIC_EXPORT=ON ^
+    -D BUILD_EXAMPLE=ON ^
+    -D CMAKE_INSTALL_PREFIX=./__build_out__/%BUILD_TYPE%/example_exe ^
+    -B __build_dir__/%BUILD_TYPE% .
+
+@if %CMAKE_GENERATOR%==Ninja (
+    cmake --build __build_dir__/%BUILD_TYPE% --config %BUILD_TYPE% -j%NUM_THREADS%
+    cmake --build __build_dir__/%BUILD_TYPE% -- install
 ) else (
-    cmake -G %CMAKE_GENERATOR% ^
-    -D CMAKE_BUILD_TYPE=%BUILD_TYPE% ^
-    -D SHARED_EXPORT=%SHARED_ENABLE% ^
-    -D STATIC_EXPORT=%STATIC_ENABLE% ^
-    -B __build_out__/%LINK_TYPE%/%BUILD_TYPE% .
-
-    cmake --build __build_out__/%LINK_TYPE%/%BUILD_TYPE% --config %BUILD_TYPE% -j8
+    cmake --build __build_dir__/%BUILD_TYPE% --config %BUILD_TYPE% --target INSTALL -j%NUM_THREADS%
 )
 
 :: end of file

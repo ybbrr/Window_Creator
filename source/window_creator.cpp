@@ -3,7 +3,7 @@
 /// @author Yasin BASAR
 /// @brief OpenGL Window context creator.
 /// @version 1.0.0
-/// @date 20/07/2014
+/// @date 22/08/2024
 /// @copyright Copyright (c) 2024
 /// 
 
@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "window_properties.hpp"
-#include "window.hpp"
+#include "window_creator.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Third Party Includes
@@ -20,7 +20,7 @@
 
 namespace YB
 {
-    class Window::Impl
+    class WindowCreator::Impl
     {
     public:
     ////////////////////////////////////////////////////////////////////////////
@@ -49,15 +49,15 @@ namespace YB
                                                      cap_to_screen_frame_rate);
         }
 
-        void render(uint8_t * data_ptr,
-                    int frame_width,
-                    int frame_height,
-                    volatile bool& t_exit_status) const noexcept
+        void image_show(uint8_t * data_ptr,
+                        int frame_width,
+                        int frame_height,
+                        volatile bool& t_exit_status) const noexcept
         {
-            this->m_window_properties->image_render(data_ptr,
-                                                    frame_width,
-                                                    frame_height,
-                                                    t_exit_status);
+            this->m_window_properties->image_show(data_ptr,
+                                                frame_width,
+                                                frame_height,
+                                                t_exit_status);
         }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -66,16 +66,17 @@ namespace YB
     private:
 
         std::unique_ptr<IWindowProperties> m_window_properties;
-    };
+
+    }; // class Window::Impl
 
 ////////////////////////////////////////////////////////////////////////////////
 // Public Functions
 ////////////////////////////////////////////////////////////////////////////////
 
-    Window::Window(const char *window_name,
-                   int window_width,
-                   int window_height,
-                   bool cap_to_screen_frame_rate)
+    WindowCreator::WindowCreator(const char *window_name,
+                                 int window_width,
+                                 int window_height,
+                                 bool cap_to_screen_frame_rate)
     {
         this->p_impl = std::make_unique<Impl>(window_name,
                                               window_width,
@@ -83,17 +84,17 @@ namespace YB
                                               cap_to_screen_frame_rate);
     }
 
-    Window::~Window() noexcept = default;
+    WindowCreator::~WindowCreator() noexcept = default;
 
-    void Window::render(uint8_t *data_ptr,
-                        int frame_width,
-                        int frame_height,
-                        volatile bool &exit_status) const noexcept
+    void WindowCreator::image_show(uint8_t *data_ptr,
+                                   int frame_width,
+                                   int frame_height,
+                                   volatile bool &exit_status) const noexcept
     {
-        this->p_impl->render(data_ptr,
-                             frame_width,
-                             frame_height,
-                             exit_status);
+        this->p_impl->image_show(data_ptr,
+                                 frame_width,
+                                 frame_height,
+                                 exit_status);
     }
 
 ////////////////////////////////////////////////////////////////////////////////

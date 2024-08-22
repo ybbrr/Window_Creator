@@ -1,9 +1,9 @@
 ///
 /// @file window_properties.hpp
 /// @author Yasin BASAR
-/// @brief Defined the WindowProperties class for creating and filling windows with given buffers.
+/// @brief Defines the `Window` class for managing a GLFW window and OpenGL context.
 /// @version 1.0.0
-/// @date 22/08/2014
+/// @date 22/08/2024
 /// @copyright Copyright (c) 2024
 ///
 
@@ -67,10 +67,10 @@ namespace YB
         /// @param frame_width[in] Image Width
         /// @param frame_height[in] Image Height
         /// @param exit_status[out] Use it to end your render loop
-        void image_render(uint8_t* data_ptr,
-                          int frame_width,
-                          int frame_height,
-                          volatile bool& exit_status) noexcept override;
+        void image_show(uint8_t* data_ptr,
+                        int frame_width,
+                        int frame_height,
+                        volatile bool& exit_status) noexcept override;
 
     ////////////////////////////////////////////////////////////////////////////
     // Private Members

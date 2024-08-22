@@ -2,6 +2,8 @@
     call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
 )
 
+rmdir /s /q __build_dir__
+
 @echo.
 @echo off
 set /P build_choice=Choose build type (1 for Release, 2 for Debug):
@@ -33,11 +35,11 @@ echo Selected CMake Generator: %CMAKE_GENERATOR%
 @echo off
 set /P library_choice=Choose library type (1 for Static, 2 for Shared):
 if "%library_choice%"=="1" (
-    set LINK_TYPE=Static
+    set LINK_TYPE=static
     set SHARED_ENABLE=OFF
     set STATIC_ENABLE=ON
 ) else if "%library_choice%"=="2" (
-    set LINK_TYPE=Shared
+    set LINK_TYPE=shared
     set SHARED_ENABLE=ON
     set STATIC_ENABLE=OFF
 ) else (
@@ -50,21 +52,20 @@ echo Selected build type: %LINK_TYPE%
 set /P "=Press any key to start compile operations... " <nul & pause >nul & echo(
 @echo.
 
-if %LINK_TYPE%==Shared (
-    cmake -G %CMAKE_GENERATOR% ^
+set /A NUM_THREADS=%NUMBER_OF_PROCESSORS% - 2
+
+cmake -G %CMAKE_GENERATOR% ^
     -D CMAKE_BUILD_TYPE=%BUILD_TYPE% ^
     -D SHARED_EXPORT=%SHARED_ENABLE% ^
     -D STATIC_EXPORT=%STATIC_ENABLE% ^
-    -B __build_out__/%LINK_TYPE%/%BUILD_TYPE% .
+    -D CMAKE_INSTALL_PREFIX=./__build_out__/%BUILD_TYPE%/%LINK_TYPE%  ^
+    -B __build_dir__/%BUILD_TYPE% .
 
-    cmake --build __build_out__/%LINK_TYPE%/%BUILD_TYPE% --config %BUILD_TYPE% -j8
+@if %CMAKE_GENERATOR%==Ninja (
+    cmake --build __build_dir__/%BUILD_TYPE% --config %BUILD_TYPE% -j%NUM_THREADS%
+    cmake --build __build_dir__/%BUILD_TYPE% -- install
 ) else (
-    cmake -G %CMAKE_GENERATOR% ^
-    -D CMAKE_BUILD_TYPE=%BUILD_TYPE% ^
-    -D SHARED_EXPORT=%SHARED_ENABLE% ^
-    -D STATIC_EXPORT=%STATIC_ENABLE% ^
-    -B __build_out__/%LINK_TYPE%/%BUILD_TYPE% .
-
-    cmake --build __build_out__/%LINK_TYPE%/%BUILD_TYPE% --config %BUILD_TYPE% -j8
+    cmake --build __build_dir__/%BUILD_TYPE% --config %BUILD_TYPE% --target INSTALL -j%NUM_THREADS%
 )
+
 :: end of file

@@ -1,9 +1,9 @@
 ///
 /// @file window_properties.cpp
 /// @author Yasin BASAR
-/// @brief
+/// @brief Implements the `Window` class for managing a GLFW window and OpenGL context.
 /// @version 1.0.0
-/// @date 27/07/2014
+/// @date 22/08/2024
 /// @copyright Copyright (c) 2024
 ///
 
@@ -46,9 +46,7 @@ namespace YB
         "#version 330 core\n"
         "layout (location = 0) in vec2 position;\n"
         "layout (location = 1) in vec2 aTexCoord;\n"
-        "\n"
         "out vec2 TexCoord;\n"
-        "\n"
         "void main()\n"
         "{\n"
         "   gl_Position = vec4(position.xy, 0.0, 1.0);\n"
@@ -59,11 +57,8 @@ namespace YB
     const char* WindowProperties::m_fragment_shader = "\n"
         "#version 330 core\n"
         "layout (location = 0) out vec4 FragColor;\n"
-        "\n"
         "in vec2 TexCoord;\n"
-        "\n"
         "uniform sampler2D t_Texture;\n"
-        "\n"
         "void main()\n"
         "{\n"
         "   FragColor = texture(t_Texture, TexCoord);\n"
@@ -232,10 +227,10 @@ namespace YB
         glfwTerminate();
     }
 
-    void WindowProperties::image_render(uint8_t * data_ptr,
-                                        int frame_width,
-                                        int frame_height,
-                                        volatile bool & exit_status) noexcept
+    void WindowProperties::image_show(uint8_t * data_ptr,
+                                      int frame_width,
+                                      int frame_height,
+                                      volatile bool & exit_status) noexcept
     {
 
         glfwMakeContextCurrent(this->m_window);

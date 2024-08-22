@@ -1,9 +1,9 @@
 ///
-/// @file IWindowProperties.hpp
+/// @file i_window_properties.hpp
 /// @author Yasin BASAR (yasin.basar@smartalpha.ai)
 /// @brief
 /// @version 1.0.0
-/// @date 28/07/2024
+/// @date 22/08/2024
 /// @copyright (c) 2024 All rights reserved.
 ///
 
@@ -52,10 +52,10 @@ namespace YB
     // Public Members
     ////////////////////////////////////////////////////////////////////////////
 
-        virtual void image_render(uint8_t * data_ptr,
-                                  int frame_width,
-                                  int frame_height,
-                                  volatile bool& t_exit_status) noexcept = 0;
+        virtual void image_show(uint8_t * data_ptr,
+                                int frame_width,
+                                int frame_height,
+                                volatile bool& t_exit_status) noexcept = 0;
 
     ////////////////////////////////////////////////////////////////////////////
     // Private Members
